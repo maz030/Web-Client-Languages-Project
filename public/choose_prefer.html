@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en"> <!-- default on the root element is translate=yes -->
+ <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>choose your preference</title> <!-- implied translate=yes inherited from ancestors -->
+
+  <script src="assets/scripts/jquery-3.1.1.min.js"></script>
+   <link href="assets/css/choose_pref.css" rel="stylesheet">
+   <script src="https://www.gstatic.com/firebasejs/3.7.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyCoYFcRxiAAniOneEdIVz9id8eaxaeEsWU",
+		authDomain: "cse134bhw-d7979.firebaseapp.com",
+		databaseURL: "https://cse134bhw-d7979.firebaseio.com",
+		storageBucket: "cse134bhw-d7979.appspot.com",
+		messagingSenderId: "353660101026"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+
+  <script>
+	var map={}; //global variable
+
+    function handleUserChoose(chooseList = ['guess', 'nike']) {
+      preRes = {};
+      for (var i = 0; i < chooseList.length; i++) {
+        preRes[i] = chooseList[i];
+      }
+      var user = firebase.auth().currentUser;
+      var userEmail = user.email.replace(/[^a-z0-9]/gi,'+').valueOf();
+      firebase.database().ref('User').child(userEmail).set(preRes);
+    }
+    function getUserChoose() {
+      var user = firebase.auth().currentUser;
+      var chooseList;
+      var userEmail = user.email.replace(/[^a-z0-9]/gi,'+').valueOf();
+      var userRef = firebase.database().ref('User/' + userEmail);
+      userRef.on('value', function(snapshot){
+        chooseList = snapshot.val();
+        windowInitial(chooseList);
+      });
+    }
+
+    function windowInitial(chooseList){
+	    for (var i in chooseList) {
+		    map[chooseList[i]]=chooseList[i];
+            change(chooseList[i]);
+        }
+    }
+
+    window.onload = function() {
+		firebase.auth().onAuthStateChanged(function(user){
+				if(!user){
+					window.location = 'login.html';
+				}
+        getUserChoose();
+			});
+    }
+  </script>
+
+ </head>
+
+<body>
+
+	<nav class="navbar navbar-inverse">
+      <div class="container-fluid">
+
+          <span class="navbar-brand">Choose your preference</span>
+      </div>
+    </nav>
+
+
+    <div>
+	    <div class="col-sm-3 sidebar">
+		    <ul class="nav">
+			    <li><a onclick="jump('clothes_anchor')">Clothes</a></li>
+			    <li><a onclick="jump('shoes_anchor')">Shoes</a></li>
+			    <li><a onclick="jump('make_up_anchor')">Makeup</a></li>
+			    <li><a onclick="jump('bag_anchor')">Bag</a></li>
+				<li><a href="Yourfollows.html" class="special" style="border-bottom: 2px solid #868383" onclick="return submit()">Submit</a></li>
+				<li><a href="mainpage.html" class="special">Back to Mainpage</a></li>
+		    </ul>
+	    </div>
+
+	    <div class="main">
+				<h1 class="page-header" id="clothes_anchor">Clothes</h1>
+				<div class="placeholders">
+
+					<div class="col-xs-6 col-sm-3 placeholder">
+		              <img src="assets/img/guess.jpg" width="200" height="200" class="img-responsive" id="guess" alt="">
+		              <div class="helper">
+			              <span>GUESS</span><br>
+			              <div>
+			              <button type="button" onclick="change('guess')">select</button>
+			              <button type="button" onclick="cancel('guess')">delete</button>
+			          	  </div>
+					  </div>
+		            </div>
+
+		            <div class="col-xs-6 col-sm-3 placeholder">
+		              <img src="assets/img/topshop.jpg" width="200" height="200" class="img-responsive" id="topshop" alt="">
+		              <div class="helper">
+			              <span>TOPSHOP</span><br>
+			              <div>
+			              <button type="button" onclick="change('topshop')">select</button>
+			              <button type="button" onclick="cancel('topshop')">delete</button>
+			          	  </div>
+					  </div>
+		            </div>
+
+                </div>
+
+                <div class="space">
+                </div>
+
+                <h1 class="page-header" id="shoes_anchor">Shoes</h1>
+				<div class="placeholders">
+
+					<div class="col-xs-6 col-sm-3 placeholder">
+		              <img src="assets/img/tods.png" width="200" height="200" class="img-responsive" id="tods" alt="">
+		              <div class="helper">
+			              <span>TOD'S</span><br>
+			              <div>
+			              <button type="button" onclick="change('tods')">select</button>
+			              <button type="button" onclick="cancel('tods')">delete</button>
+			          	  </div>
+					  </div>
+		            </div>
+
+		            <div class="col-xs-6 col-sm-3 placeholder">
+		              <img src="assets/img/nike.png" width="200" height="200" class="img-responsive" id="nike" alt="">
+		              <div class="helper">
+			              <span>NIKE</span><br>
+			              <div>
+			              <button type="button" onclick="change('nike')">select</button>
+			              <button type="button" onclick="cancel('nike')">delete</button>
+			          	  </div>
+					  </div>
+		            </div>
+
+                </div>
+
+                <div class="space">
+                </div>
+
+                <h1 class="page-header" id="make_up_anchor">Make up</h1>
+				<div class="placeholders">
+
+					<div class="col-xs-6 col-sm-3 placeholder">
+		              <img src="assets/img/lamer.jpg" width="200" height="200" class="img-responsive" id="lamer" alt="">
+		              <div class="helper">
+			              <span>LAMER</span><br>
+			              <div>
+			              <button type="button" onclick="change('lamer')">select</button>
+			              <button type="button" onclick="cancel('lamer')">delete</button>
+			          	  </div>
+					  </div>
+		            </div>
+
+
+		            <div class="col-xs-6 col-sm-3 placeholder">
+		              <img src="assets/img/kiehls.jpg" width="200" height="200" class="img-responsive" id="kiehls" alt="">
+		              <div class="helper">
+			              <span>KIEHL'S</span><br>
+			              <div>
+			              <button type="button" onclick="change('kiehls')">select</button>
+			              <button type="button" onclick="cancel('kiehls')">delete</button>
+			          	  </div>
+					  </div>
+		            </div>
+
+                </div>
+
+                <div class="space">
+                </div>
+
+				<h1 class="page-header" id="bag_anchor">Bag</h1>
+				<div class="placeholders">
+
+					<div class="col-xs-6 col-sm-3 placeholder">
+		              <img src="assets/img/mk.png" width="200" height="200" class="img-responsive" id="michealkor" alt="">
+		              <div class="helper">
+			              <span>MICHEAL KORS</span><br>
+			              <div>
+			              <button type="button" onclick="change('michealkor')">select</button>
+			              <button type="button" onclick="cancel('michealkor')">delete</button>
+			          	  </div>
+					  </div>
+		            </div>
+		            <div class="col-xs-6 col-sm-3 placeholder">
+		              <img src="assets/img/katespade.png" width="200" height="200" class="img-responsive" id="katespade" alt="">
+		              <div class="helper">
+			              <span>KATE SPADE</span><br>
+			              <div>
+			              <button type="button" onclick="change('katespade')">select</button>
+			              <button type="button" onclick="cancel('katespade')">delete</button>
+			          	  </div>
+					  </div>
+		            </div>
+
+                </div>
+
+                <div class="space">
+                </div>
+
+
+		</div>
+
+    </div>
+
+
+ </body>
+
+ <script>
+	function jump(id){
+		id = '#'+id;
+		var target= $(id).offset().top;
+		$('body').animate({scrollTop:target}, 300);
+	}
+	function change(id){
+		document.getElementById(id).style.border="3px solid red";
+		map[id]=id;
+	}
+	function cancel(id){
+		document.getElementById(id).style.border="none";
+		delete map[id];
+	}
+	function submit(){
+		var values = [];
+        for (var i in map) {
+            if (map[i] === i) {
+                values.push(i);
+            }
+        }
+        alert('Submitted');
+        handleUserChoose(values);
+        return true;
+	}
+ </script>
+
+
+
+</html>

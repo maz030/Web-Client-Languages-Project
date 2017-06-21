@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>mainpage</title>
+		<link rel="stylesheet" type="text/css" href="./assets/css/our.css">
+		<script src="https://www.gstatic.com/firebasejs/3.7.0/firebase.js"></script>
+		<script src="assets/scripts/sale.min.js"> </script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyCoYFcRxiAAniOneEdIVz9id8eaxaeEsWU",
+		authDomain: "cse134bhw-d7979.firebaseapp.com",
+		databaseURL: "https://cse134bhw-d7979.firebaseio.com",
+		storageBucket: "cse134bhw-d7979.appspot.com",
+		messagingSenderId: "353660101026"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+	<script type="text/javascript">
+		var frame = {}; // global variable for comments
+		function createButton(context, func){
+			var button = document.createElement("input");
+			button.type = "button";
+			button.value = "Sign Out";
+			button.onclick = func;
+			context.appendChild(button);
+		}
+		function createFrame(commentId){
+			frame[commentId] = document.createElement("div");
+			frame[commentId].style.backgroundColor ="#dddbdb";
+			frame[commentId].style.padding="20px";
+		}
+		function initPage(){
+			firebase.auth().onAuthStateChanged(function(user){
+				if(user){
+					var curr = document.getElementById('account');
+					curr.textContent = 'Hello, ' + user.email;
+					createButton(document.getElementById('account'), function(){
+						firebase.auth().signOut();
+						window.location = 'login.html';
+					});
+					getUserContents();
+				}
+				else{
+					window.location = 'login.html';
+				}
+			});
+		}
+		function loadComments(commentId, contentName){
+			var commentRef = firebase.database().ref('Comments/' + contentName);
+			commentRef.once('value', function(snapshot){
+				var commentList = snapshot.val();
+
+				if(commentList == null)
+					return;
+				createFrame(commentId);
+				var element = document.getElementById(commentId);
+				element.appendChild(frame[commentId]);
+
+				for(userID in commentList){
+					var currCommentId = userID.split('+')[0] + ":";
+					var keyList = commentList[userID];
+					for(commentNode in keyList){
+						var eachComment = keyList[commentNode];
+						var paragraph = document.createElement("p");
+						var text_user = document.createTextNode(currCommentId);
+						var forUser = document.createElement("strong");
+						forUser.style.fontsize="xx-large";
+						forUser.style.fontFamily="fantasy"
+						forUser.style.textDecoration="underline";
+						forUser.appendChild(text_user);
+						paragraph.appendChild(forUser);
+						var text = document.createTextNode(eachComment);
+						paragraph.appendChild(text);
+						frame[commentId].appendChild(paragraph);
+
+						hideComment(commentId);
+
+					}
+				}
+			});
+		}
+
+		function addContentDiv(contentName, placeLeft) {
+			var conDiv = document.createElement('div');
+			conDiv.id = "container_" + contentName;
+			conDiv.className = "container";
+			document.getElementsByTagName('body')[0].appendChild(conDiv);
+			var imgDiv = document.createElement('div');
+			if (placeLeft)
+				imgDiv.className = "picture clearfix leftPos";
+			else
+				imgDiv.className = "picture clearfix rightPos";
+			var textDiv = document.createElement('div');
+			textDiv.className = "content clearfix";
+			textDiv.id = "text_" + contentName;
+			imgDiv.innerHTML = '<img src="assets/img/buying1.png" alt="" id="img_' + contentName + '">';
+			textDiv.innerHTML = '<p>This is our contents</p>';
+			hrEl = document.createElement('hr');
+			if (placeLeft)
+				hrEl.style = "clear:left";
+			else
+				hrEl.style = "clear:right";
+			var formDiv1 = document.createElement('div');
+			formDiv1.className = "comment";
+			formDiv1.id = "comment_" + contentName;
+			formDiv1.style = "clear:left";
+			var formDiv2 = document.createElement('div');
+			formDiv2.className = "commit-submit";
+			formDiv2.style = "clear:right";
+			var formDiv3 = document.createElement('div');
+			formDiv3.style = "text-align:right";
+			//hide & show
+			var ref1 = document.createElement('a');
+			ref1.className = "helper";
+			ref1.onclick = function(){showComment(formDiv1.id); return false;};
+			var refcontent1 = document.createTextNode("show comments");
+			ref1.appendChild(refcontent1);
+			var ref2 = document.createElement('a');
+			ref2.className = "helper";
+			ref2.onclick = function(){hideComment(formDiv1.id);return false;};
+			var refcontent2 = document.createTextNode("hide comments");
+			ref2.appendChild(refcontent2);
+			//button
+			var input1 = document.createElement('input');
+			input1.id = "usercomment_" + contentName;
+			input1.type = "text";
+			input1.placeholder = "Make comments here";
+			input1.size = "70";
+			var input2 = document.createElement('input');
+			input2.className = "submitButton";
+			input2.type = "submit";
+			input2.value = "SUBMIT";
+			input2.onclick = function(){addMyComment(formDiv1.id, input1.id, contentName);};
+			formDiv3.appendChild(ref1);
+			formDiv3.appendChild(ref2);
+			formDiv3.appendChild(input1);
+			formDiv3.appendChild(input2);
+			formDiv2.appendChild(formDiv3);
+			formDiv1.append(formDiv2);
+			conDiv.appendChild(imgDiv);
+			conDiv.appendChild(textDiv);
+			conDiv.appendChild(hrEl);
+			conDiv.appendChild(formDiv1);
+			loadComments(formDiv1.id, contentName);
+		}
+
+		window.onload = function(){
+			initPage();
+		}
+	</script>
+	</head>
+	<body>
+		<div class = "container">
+			<div class="top-search">
+				<ul>
+				<li style="float:left"><a id = "top-manage" href="choose_prefer.html">Manage Your Follows</a></li>
+	        	<li style="float:left" id="account"><a href="login.html">Account (log in)</a></li>
+	        	<li><input class="submitButton" type="submit" value="Search"></li>
+	        	<li><input type="text" value="type in search" size="20"></li>
+	        	</ul>
+	        </div>
+    	</div>
+
+    	<div class="container" style="clear:both">
+    		<ul class="navbar">
+    			<li class="navbar-head"><a href="mainpage.html">Categories</a></li>
+					<li class="navbar-item"><a href="clothes.html">clothes</a></li>
+    			<li class="navbar-item"><a href="shoes.html">shoes</a></li>
+    			<li class="navbar-item"><a href="makeups.html">makeup</a></li>
+    			<li class="navbar-item"><a href="bags.html">bag</a></li>
+    		</ul>
+    		<hr style="clear:left"/>
+    	</div>
+
+    	<div class="container" style="clear:both">
+    		<ul class="navbar-following">
+    			<li class="navbar-following-item"><a href="mainpage.html">Top Clicks</a></li>
+    			<li class="navbar-following-item" id="focusFollowing"><a href="Yourfollows.html">Your Follows</a></li>
+    		</ul>
+    		<hr style="clear:left"/>
+    	</div>
+
+	</body>
+	<script>
+		function showComment(id){
+			if(frame[id] != undefined){
+				frame[id].style.display='block';
+			}
+			else{
+				alert("No comments now!");
+			}
+		}
+		function hideComment(id){
+			if(frame[id] != undefined){
+				frame[id].style.display='none';
+			}
+			else{
+				alert("No comments now!");
+			}
+		}
+		//id2 for getting input value; id1 for comment div
+		function addMyComment(id1, id2, contentName){
+			//add my comment
+			var userNow = firebase.auth().currentUser;
+			if (!userNow) {
+				alert("You have not login!");
+				return;
+			}
+			var userEmail = userNow.email.replace(/[^a-z0-9]/gi,'+').valueOf();
+			var newPostKey = firebase.database().ref().child('posts').push().key;
+			var updates = {};
+			updates['Comments/' + contentName + '/' + userEmail + '/' + newPostKey] = document.getElementById(id2).value;
+			firebase.database().ref().update(updates);
+			var paragraph = document.createElement("p");
+			var user = userEmail.split('+')[0] + ":";
+			var text_user = document.createTextNode(user);
+			var forUser = document.createElement("strong");
+			forUser.style.fontsize="xx-large";
+			forUser.style.fontFamily="fantasy"
+			forUser.style.textDecoration="underline";
+			forUser.appendChild(text_user);
+			paragraph.appendChild(forUser);
+			var text = document.createTextNode(" "+document.getElementById(id2).value);
+			paragraph.appendChild(text);
+			//if this comment is never created. It's the first time there's user comment it.
+			if(frame[id1]=== undefined){
+				createFrame(id1);
+				//connect to div by id1
+				var element = document.getElementById(id1);
+				element.appendChild(frame[id1]);
+			}
+			frame[id1].appendChild(paragraph);
+			if(frame[id1].style.display=='none'){
+				showComment(id1);
+			}
+		}
+	</script>
+</html>

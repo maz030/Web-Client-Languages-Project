@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>mainpage</title>
+		<link rel="stylesheet" type="text/css" href="./assets/css/our.css">
+		<script src="https://www.gstatic.com/firebasejs/3.7.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyCoYFcRxiAAniOneEdIVz9id8eaxaeEsWU",
+		authDomain: "cse134bhw-d7979.firebaseapp.com",
+		databaseURL: "https://cse134bhw-d7979.firebaseio.com",
+		storageBucket: "cse134bhw-d7979.appspot.com",
+		messagingSenderId: "353660101026"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+	<script type="text/javascript">
+		function createButton(context, func){
+			var button = document.createElement("input");
+			button.type = "button";
+			button.value = "Sign Out";
+			button.onclick = func;
+			context.appendChild(button);
+		}
+		function initPage(){
+			firebase.auth().onAuthStateChanged(function(user){
+				if(user){
+					var curr = document.getElementById('account');
+					curr.textContent = 'Hello, ' + user.email;
+					//document.getElementById('account').setAttribute('href', "login.html");
+					//alert(curr.value);
+					createButton(document.getElementById('account'), function(){
+						firebase.auth().signOut();
+						window.location = 'login.html';
+					});
+				}
+			});
+		}
+		window.onload = function(){
+			initPage();
+		}
+	</script>
+	</head>
+	<body>
+		<div class = "container">
+			<div class="top-search">
+				<ul>
+				<li style="float:left"><a id = "top-manage" href="choose_prefer.html">Manage Your Follows</a></li>
+	        	<li style="float:left" id="account"><a href="login.html">Account (log in)</a></li>
+	        	<li><input class="submitButton" type="submit" value="Search"></li>
+	        	<li><input type="text" value="type in search" size="20"></li>
+	        	</ul>
+	        </div>
+    	</div>
+
+    	<div class="container" style="clear:both">
+    		<ul class="navbar">
+    			<li class="navbar-head"><a href="mainpage.html">Categories</a></li>
+    			<li class="navbar-item"><a href="clothes.html">clothes</a></li>
+    			<li class="navbar-item"><a href="shoes.html">shoes</a></li>
+    			<li class="navbar-item"><a href="makeups.html">makeup</a></li>
+    			<li class="navbar-item"><a href="bags.html">bag</a></li>
+    		</ul>
+    		<hr style="clear:left"/>
+    	</div>
+
+
+    	<div class="container" style="clear:both">
+    		<ul class="navbar-following">
+    			<li class="navbar-following-item"><a href="mainpage.html">Top Clicks</a></li>
+    			<li class="navbar-following-item"><a href="Yourfollows.html">Your Follows</a></li>
+    		</ul>
+    		<hr style="clear:left"/>
+    	</div>
+
+
+
+	<div class="container">
+		<div class="picture clearfix leftPos">
+			<img src="assets/img/outdoor1.jpg" alt="">
+		</div>
+		<div class="content clearfix">
+			<h1>Up to 50% Off + Extra 10% Off The North Face Clearance @ Moosejaw</h1>
+			<ul>
+				<li><p>New styles added!</p></li>
+				<li><p>Moosejaw offers up to 50% off + extra 10% off The North Face Clearance via coupon code "NACHO10"</p></li>
+				<li><p>Free Shipping on orders over $49</p></li>
+				<li><p>Deal ends 3/5</p></li>
+			</ul>
+			<!-- <hr style="clear:left"/> -->
+		</div>
+		<hr style="clear:left"/>
+		<div class="comment" style="clear:left">
+			<div class="commit-submit" style="clear:right">
+				<form style="text-align:right">
+					<input type="text" value="This is a comment" size="70">
+					<input class="submitButton" type="submit" value="SUBMIT">
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<br>
+
+	<p style="text-align: center">Contact us | FAQs</p>
+
+	</body>
+</html>

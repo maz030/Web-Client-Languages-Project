@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>SaleDex</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Cinzel%20Decorative">
+  <script src="https://www.gstatic.com/firebasejs/3.7.0/firebase.js"></script>
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyCoYFcRxiAAniOneEdIVz9id8eaxaeEsWU",
+		authDomain: "cse134bhw-d7979.firebaseapp.com",
+		databaseURL: "https://cse134bhw-d7979.firebaseio.com",
+		storageBucket: "cse134bhw-d7979.appspot.com",
+		messagingSenderId: "353660101026"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+</head>
+<body>
+  <div class="imageContainer">
+    <img src="img/bg1.jpg" id='bg' alt="">
+    <h1 id="title">SaleDex</h1>
+    <p id="subtitle">Your everyday money box!</p>
+    <a href="mainpage.html"><p id="button" style="color : black">Join us</p></a>
+  </div>
+
+  <div id="peopleContainer">
+    <h2 id="team">Our team</h2>
+    <div id="leftP">
+      <div class="photos"><img src="img/JING.jpg" class = "pics" alt=""></div>
+      <div class="names"><p>Jing Nie</p></div>
+      <div class="intro"><p>jin020@eng.ucsd.edu</p></div>
+    </div>
+    <div id="centerP">
+      <div class="photos"><img src="img/JY.jpg" class = "pics" alt=""></div>
+      <div class="names"><p>Junyao Wang</p></div>
+      <div class="intro"><p>juw086@eng.ucsd.edu</p></div>
+    </div>
+    <div id="rightP">
+      <div class="photos"><img src="img/MY.jpg" class = "pics" alt=""></div>
+      <div class="names"><p>Mayu Zhang</p></div>
+      <div class="intro"><p>maz030@eng.ucsd.edu</p></div>
+    </div>
+  </div>
+</body>
+</html>
